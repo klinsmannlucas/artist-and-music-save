@@ -1,9 +1,9 @@
 package com.artistsave.Artist.and.Music.models;
 
 import com.artistsave.Artist.and.Music.models.dataartist.ArtistInfo;
+import com.artistsave.Artist.and.Music.service.ScrapingDates;
 
-import java.time.LocalDate;
-import java.util.HashMap;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
@@ -11,24 +11,25 @@ public class ModelArtist {
     private long id;
     private String name;
     private String urlArtist;
-    private Map<String,String> tags;
+    private List<String> tags;
     private String summary;
     /*index:
     0 - born
     1 - atual age
     2 - die(if alive this will be null)
      */
-    private List<LocalDate> imporantDates;
+    private Map<String,List<String>> imporantDates;
 
     public ModelArtist(ArtistInfo a){
         this.name = a.artist().name();
         this.urlArtist = a.artist().url()+"/+wiki";
         this.summary = a.artist().bio().summary();
 
-        Map<String,String> mapNameUrl = new HashMap<>();
-        a.artist().tags().tag().forEach(t -> mapNameUrl.put(t.name(),t.url()));
+        List<String> tagsTemp = new ArrayList<>();
+        a.artist().tags().tag().forEach(t -> tagsTemp.add(t.name()));
+        this.tags = tagsTemp;
 
-        this.tags = mapNameUrl;
+        this.imporantDates = ScrapingDates.getFromLastFM(this.urlArtist);
     }
 
     public long getId() {
@@ -47,11 +48,11 @@ public class ModelArtist {
         this.name = name;
     }
 
-    public Map<String, String> getTags() {
+    public List<String> getTags() {
         return tags;
     }
 
-    public void setTags(Map<String, String> tags) {
+    public void setTags(List<String> tags) {
         this.tags = tags;
     }
 
@@ -71,11 +72,11 @@ public class ModelArtist {
         this.summary = summary;
     }
 
-    public List<LocalDate> getImporantDates() {
+    public Map<String,List<String>> getImporantDates() {
         return imporantDates;
     }
 
-    public void setImporantDates(List<LocalDate> imporantDates) {
+    public void setImporantDates( Map<String,List<String>> imporantDates) {
         this.imporantDates = imporantDates;
     }
 

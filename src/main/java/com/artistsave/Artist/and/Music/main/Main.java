@@ -28,6 +28,9 @@ public class Main {
                 case 1:
                     registerArtist();
                     break;
+                case 2:
+                    registerTrack();
+                    break;
                 case 9:
                     System.out.println("Saindo...");
                     break;
@@ -43,5 +46,8 @@ public class Main {
         var artistInfo = LastFM.getArtistInfo(choiceArtist);
         var artist = new ModelArtist(artistInfo);
         System.out.println(artist);
+    }
+
+    private static void registerTrack(){
     }
 }
