@@ -15,11 +15,33 @@ public class LastFM {
     private static final String URL = "http://ws.audioscrobbler.com/2.0/?";
     private static final String API_KEY = System.getenv("LASTFM_API_KEY");
 
+    public static String getTrackCorretion (String artistName,String trackName){
+        String codedUrl = URL+
+                "method=track.getcorrection"+
+                "&format=json"+
+                "&artist="+ URLEncoder.encode(artistName, StandardCharsets.UTF_8)+
+                "&track="+ URLEncoder.encode(trackName, StandardCharsets.UTF_8)+
+                "&api_key="+API_KEY;
+
+        String json = LastFM.getJson(codedUrl);
+        return Deserialization.jsonToStringCorretion(json,"track");
+    }
+
+    public static String getArtistCorretion (String artistName){
+        String codedUrl = URL+
+                "method=artist.getcorrection"+
+                "&format=json"+
+                "&autocorret=1"+
+                "&artist="+ URLEncoder.encode(artistName, StandardCharsets.UTF_8)+
+                "&api_key="+API_KEY;
+
+        String json = LastFM.getJson(codedUrl);
+        return Deserialization.jsonToStringCorretion(json,"artist");
+    }
     public static ArtistInfo getArtistInfo (String artistName){
         String codedUrl = URL+
                 "method=artist.getinfo"+
                 "&format=json"+
-                "&autocorret=1"+
                 "&artist="+ URLEncoder.encode(artistName, StandardCharsets.UTF_8)+
                 "&api_key="+API_KEY;
 
@@ -31,13 +53,11 @@ public class LastFM {
         String codedUrl = URL+
                 "method=track.getinfo"+
                 "&format=json"+
-                "&autocorret=1"+
-                "&artist="+ URLEncoder.encode(artistName, StandardCharsets.UTF_8)+
+                "&artist="+ URLEncoder.encode(artistName,StandardCharsets.UTF_8)+
                 "&track="+ URLEncoder.encode(trackName,StandardCharsets.UTF_8)+
                 "&api_key="+API_KEY;
 
         String json = LastFM.getJson(codedUrl);
-        System.out.println(json);
         return Deserialization.jsonToObject(json,TrackInfo.class);
     }
 

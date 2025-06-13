@@ -2,24 +2,42 @@ package com.artistsave.Artist.and.Music.models;
 
 import com.artistsave.Artist.and.Music.models.dataartist.ArtistInfo;
 import com.artistsave.Artist.and.Music.service.ScrapingDates;
+import com.artistsave.Artist.and.Music.service.StringListMapConverter;
+import jakarta.persistence.*;
 
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Map;
 
+@Entity
+@Table(name = "artist")
 public class ModelArtist {
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
     private long id;
+    @Column(unique = true)
     private String name;
     private String urlArtist;
     private List<String> tags;
+
+    @Column(columnDefinition = "TEXT")
     private String summary;
     /*index:
-    0 - born
-    1 - atual age
-    2 - die(if alive this will be null)
+    0 - dia do nascimento do artista ou dia da criação da banda
+    1 - local de nascimento do artista ou da banda
+    2 - morte do artista ou todos os membros da banda
+    JPA não conseguiu salvar em automaticamente entou vou salvar em json
      */
+    @Convert(converter = StringListMapConverter.class)
+    @Column(columnDefinition = "TEXT")
     private Map<String,List<String>> imporantDates;
 
+    @OneToMany(mappedBy = "artist")
+    private List<ModelTrack> trackList = new ArrayList<>();
+
+    public ModelArtist(){
+
+    }
     public ModelArtist(ArtistInfo a){
         this.name = a.artist().name();
         this.urlArtist = a.artist().url()+"/+wiki";
@@ -78,6 +96,15 @@ public class ModelArtist {
 
     public void setImporantDates( Map<String,List<String>> imporantDates) {
         this.imporantDates = imporantDates;
+    }
+
+    public List<ModelTrack> getTrackList() {
+        return trackList;
+    }
+
+    public void setTrackList(List<ModelTrack> trackList) {
+        trackList.forEach(t -> t.setArtist(this));
+        this.trackList = trackList;
     }
 
     @Override
