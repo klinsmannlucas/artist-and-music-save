@@ -1,6 +1,7 @@
 package com.artistsave.Artist.and.Music.main;
 
 import com.artistsave.Artist.and.Music.models.ModelArtist;
+import com.artistsave.Artist.and.Music.models.ModelTrack;
 import com.artistsave.Artist.and.Music.service.LastFM;
 
 import java.util.Scanner;
@@ -44,10 +45,20 @@ public class Main {
         System.out.println("Digite o nome do artista desejado: ");
         var choiceArtist = sc.nextLine();
         var artistInfo = LastFM.getArtistInfo(choiceArtist);
-        var artist = new ModelArtist(artistInfo);
-        System.out.println(artist);
+        var modelArtist = new ModelArtist(artistInfo);
+        //Implementar um armazenamento no banco de dados.
+        System.out.println(modelArtist);
     }
 
     private static void registerTrack(){
+        System.out.println("Digite o nome do artista da música desejada: ");
+        var choiceArtist = sc.nextLine();
+        //Implementar uma chegagem no banco de dados.
+
+        System.out.println("Digite o nome da música desejada: ");
+        var choiceTrack = sc.nextLine();
+        var trackInfo = LastFM.getTrackInfo(choiceTrack,choiceArtist);
+        var moldelTrack = new ModelTrack(trackInfo);
+        System.out.println(moldelTrack);
     }
 }

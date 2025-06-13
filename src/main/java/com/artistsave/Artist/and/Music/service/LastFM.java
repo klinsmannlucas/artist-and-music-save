@@ -1,6 +1,7 @@
 package com.artistsave.Artist.and.Music.service;
 
 import com.artistsave.Artist.and.Music.models.dataartist.ArtistInfo;
+import com.artistsave.Artist.and.Music.models.datatrack.TrackInfo;
 
 import java.io.IOException;
 import java.net.URI;
@@ -25,6 +26,21 @@ public class LastFM {
         String json = LastFM.getJson(codedUrl);
         return Deserialization.jsonToObject(json,ArtistInfo.class);
     }
+
+    public static TrackInfo getTrackInfo (String trackName,String artistName){
+        String codedUrl = URL+
+                "method=track.getinfo"+
+                "&format=json"+
+                "&autocorret=1"+
+                "&artist="+ URLEncoder.encode(artistName, StandardCharsets.UTF_8)+
+                "&track="+ URLEncoder.encode(trackName,StandardCharsets.UTF_8)+
+                "&api_key="+API_KEY;
+
+        String json = LastFM.getJson(codedUrl);
+        System.out.println(json);
+        return Deserialization.jsonToObject(json,TrackInfo.class);
+    }
+
 
     private static String getJson (String codedUrl){
         var client = HttpClient.newHttpClient();
